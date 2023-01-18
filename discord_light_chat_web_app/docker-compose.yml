@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  sql:
+    image: mysql:8.0
+    environment:
+      - MYSQL_DATABASE=nandish_discord_db
+      - MYSQL_USER=nandish
+      - MYSQL_PASSWORD=nandish_project
+      - MYSQL_ROOT_PASSWORD=nandish_project
+  back:
+    build: ./sqldb-back
+    restart: always
+    ports:
+      - "3333:3333"
+    depends_on:
+      - sql
+    environment:
+      DATABASE_HOST: sql
+  front:
+    build: ./react-front
+    restart: always
+    ports:
+      - "8888:8888"
+    depends_on:
+      - back
+    environment:
+      VITE_API_URL: http://localhost:3333
+
